@@ -1,0 +1,5 @@
+{
+    "TestFlag":true,
+    "ListenPort":3001,
+    "FileMap":"E:/vbshared/maps/moscow/central-fed-district-latest.osm.pbf"
+}
