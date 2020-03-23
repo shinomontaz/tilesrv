@@ -16,6 +16,7 @@ type Config struct {
 	ListenPort int    `env:"TSRV_LISTENPORT"`
 	TestFlag   bool   `env:"TSRV_TESTFLAG"`
 	FileMap    string `env:"TSRV_FILEMAP"`
+	Styles     map[string]map[string]Style
 }
 
 type Env struct {

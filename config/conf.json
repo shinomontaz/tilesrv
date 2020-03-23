@@ -1,22 +1,5 @@
 {
-    "ListenPort":"4400",
     "TestFlag":true,
-
-    "AuthSecret":"AuthSecret",
-    "AuthExpires": 5,
-    
-    "DbHost":"localhost",
-    "DbName":"marsh2",
-    "DbUser":"marshrutich",
-    "DbPass":"qwe",
-    "DbPort": 5432,
-
-    "RabbitHost":"192.168.1.5",
-    "RabbitPort":5672,
-    "RabbitUser":"test",
-    "RabbitPass":"test",
-    "RabbitRequestQueue":"drm_in",
-    "RabbitResponseQueue":"drm_out",
-
-    "GeocoderUrl": "http://163.172.212.27:6789"
+    "ListenPort":3001,
+    "FileMap":"E:/vbshared/maps/moscow/central-fed-district-latest.osm.pbf"
 }

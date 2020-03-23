@@ -20,9 +20,9 @@ func init() {
 
 func main() {
 	r := reader.New(env.Config.FileMap)
-	r.Init()
+	gIndex := r.Init()
 
-	tlh := tile.New("/tiles", r)
+	tlh := tile.New("/tiles", gIndex)
 
 	http.Handle("/tiles/", tlh)
 	http.Handle("/metrics", promhttp.Handler())
