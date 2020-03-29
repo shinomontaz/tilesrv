@@ -14,19 +14,19 @@ type FeatureRef struct {
 type S2Index map[s2.CellID]([]FeatureRef)
 
 func (si S2Index) AddWay(w Way, zoom int) {
-	c := s2.EmptyCap()
+	cap := s2.EmptyCap()
 
 	for _, node := range w.Nodes {
-		c = c.AddPoint(s2.PointFromLatLng(s2.LatLngFromDegrees(node.Lat(), node.Lon())))
+		cap = cap.AddPoint(s2.PointFromLatLng(s2.LatLngFromDegrees(node.Lat(), node.Lon())))
 	}
 
-	if c.IsEmpty() {
+	if cap.IsEmpty() {
 		return
 	}
 
 	rc := &s2.RegionCoverer{MaxLevel: 30, MaxCells: 10}
-	cu := rc.FastCovering(c)
-	for _, cid := range cu {
+	cellUnion := rc.FastCovering(cap)
+	for _, cid := range cellUnion {
 		si[cid] = append(si[cid], FeatureRef{w.Id, types.ItemTypeWay, zoom})
 		for l := cid.Level(); l > 0; l-- {
 			cid = cid.Parent(l - 1)
@@ -44,21 +44,19 @@ func (si S2Index) GetFeatures(nwPt, sePt types.IPoint, zoom int) []FeatureRef {
 
 	rc := &s2.RegionCoverer{MaxLevel: 30, MaxCells: 10}
 
-	cu := rc.Covering(r)
+	cellUnion := rc.Covering(r)
 
 	visitCid := make(map[s2.CellID]bool)
 	visitF := make(map[int64]bool)
 	ret := make([]FeatureRef, 0)
 
-	for _, cid := range cu {
+	for _, cid := range cellUnion {
 		if v, ok := si[cid]; ok {
 			ret = si.visitDown(cid, v, visitF, ret)
-
 		}
-		for l := cid.Level(); l > 0; l-- {
+		for l := cid.Level(); l > 0; l-- { // по уровню идем вниз (т.е. увеличивается размер клетки)
 			cid = cid.Parent(l - 1)
 			ret = si.visitUp(cid, visitCid, visitF, ret)
-
 		}
 	}
 
@@ -74,7 +72,7 @@ func (si S2Index) GetFeatures(nwPt, sePt types.IPoint, zoom int) []FeatureRef {
 }
 
 func (si S2Index) visitUp(cid s2.CellID, visitCid map[s2.CellID]bool, visitF map[int64]bool, ret []FeatureRef) []FeatureRef {
-	v, ok := si[cid]
+	fr, ok := si[cid]
 	if !ok {
 		return ret
 	}
@@ -83,7 +81,7 @@ func (si S2Index) visitUp(cid s2.CellID, visitCid map[s2.CellID]bool, visitF map
 	}
 	visitCid[cid] = true
 
-	for _, f := range v {
+	for _, f := range fr {
 		if !visitF[f.Id] {
 			ret = append(ret, f)
 			visitF[f.Id] = true
@@ -101,17 +99,14 @@ func (si S2Index) visitDown(cid s2.CellID, fr []FeatureRef, visitF map[int64]boo
 		}
 	}
 
-	if !cid.IsLeaf() {
+	if !cid.IsLeaf() { // Если не самый нижний уровень этой клетки то проходимся по потомкам
 		chs := cid.Children()
-		for i := 0; i < 4; i++ {
-			if v, ok := si[chs[i]]; ok {
-				ret = si.visitDown(chs[i], v, visitF, ret)
-
+		for _, cellID := range chs {
+			if v, ok := si[cellID]; ok {
+				ret = si.visitDown(cellID, v, visitF, ret)
 			}
 		}
-
 	}
 
 	return ret
-
 }

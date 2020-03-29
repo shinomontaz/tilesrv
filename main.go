@@ -20,9 +20,13 @@ func init() {
 
 func main() {
 	r := reader.New(env.Config.FileMap)
+
+	// fmt.Println(env.Config.Styles)
+	// panic("!")
+
 	gIndex := r.Init()
 
-	tlh := tile.New("/tiles", gIndex)
+	tlh := tile.New("/tiles", gIndex, env.Config.Styles)
 
 	http.Handle("/tiles/", tlh)
 	http.Handle("/metrics", promhttp.Handler())

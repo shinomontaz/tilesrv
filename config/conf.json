@@ -1,5 +1,42 @@
 {
     "TestFlag":true,
     "ListenPort":3001,
-    "FileMap":"E:/vbshared/maps/moscow/central-fed-district-latest.osm.pbf"
+    "FileMap":"E:/vbshared/maps/moscow/central-fed-district-latest.osm.pbf",
+    "Styles": {
+        "boundary": {
+                "administrative": {
+                "color": "#f00",
+                "line": 1,
+                "dash": 0.1,
+                "opacity": 0.75
+            }
+        },
+        "highway": {
+            "motorway": {
+                "color": "#808000",
+                "line": 2
+            },
+            "trunk": {
+                "color": "#808000",
+                "line": 3
+            }
+        },
+        "railway": {
+            "rail": {
+                "color": "#000",
+                "dash": 0.2,
+                "line": 2
+            },
+            "monorail": {
+                "color": "#0ff",
+                "dash": 0.1,
+                "line": 1
+            },
+            "light_rail": {
+                "color": "#0ff",
+                "dash": 0.1,
+                "line": 1
+            }
+        }
+    }
 }

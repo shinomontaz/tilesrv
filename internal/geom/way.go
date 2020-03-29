@@ -12,9 +12,8 @@ type Way struct {
 	Nodes   []types.IPoint
 }
 
-func (w Way) SetNodes(nodes map[int64]types.IPoint) {
+func (w *Way) SetNodes(nodes map[int64]types.IPoint) {
 	w.Nodes = make([]types.IPoint, 0)
-
 	for _, id := range w.NodeIDs {
 		w.Nodes = append(w.Nodes, nodes[id])
 	}
@@ -37,6 +36,7 @@ func (w Way) MatchAny(rules map[int][]types.Tag) (int, bool) {
 			return zoom, true
 		}
 	}
+
 	return -1, false
 }
 

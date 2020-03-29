@@ -1,12 +1,11 @@
 package tile
 
 import (
-	"fmt"
 	"image"
-	"image/color"
 	"math"
 
 	"github.com/golang/geo/s2"
+	"github.com/shinomontaz/tilesrv/config"
 	"github.com/shinomontaz/tilesrv/internal/osm"
 	"github.com/shinomontaz/tilesrv/internal/types"
 
@@ -21,7 +20,7 @@ type Tile struct {
 	cv             *image.RGBA
 	zoom, tileSize int
 	nwPt, sePt     Point
-	styles         map[string]map[string]Style
+	styles         map[string]map[string]config.Style
 }
 
 func (t *Tile) GetNw() types.IPoint {
@@ -66,7 +65,6 @@ func (tl *Tile) Draw(osmData *osm.Data) error {
 }
 
 func (t *Tile) DrawPolyLine(coords [][]float64, tags map[string]string) {
-
 	path := gg.NewContextForRGBA(t.cv)
 
 	t.style(path, tags)
@@ -79,38 +77,20 @@ func (t *Tile) DrawPolyLine(coords [][]float64, tags map[string]string) {
 		}
 	}
 
-	// TODO check area tag ?
-	// path.Close()
 	path.Stroke()
 }
 
 func (t *Tile) style(c *gg.Context, tags map[string]string) {
 	for key, val := range tags {
-		if _, exists := t.Styles[key]; !exists {
+		if _, exists := t.styles[key]; !exists {
 			continue
 		}
-		for tagKey, style := range t.Styles[key] {
-			if tagKey != key {
+
+		for tagKey, style := range t.styles[key] {
+			if tagKey != val {
 				continue
 			}
 			style.Implement(c)
 		}
 	}
-}
-
-func parseHexColor(s string) (c color.RGBA, err error) {
-	c.A = 0xff
-	switch len(s) {
-	case 7:
-		_, err = fmt.Sscanf(s, "#%02x%02x%02x", &c.R, &c.G, &c.B)
-	case 4:
-		_, err = fmt.Sscanf(s, "#%1x%1x%1x", &c.R, &c.G, &c.B)
-		// Double the hex digits:
-		c.R *= 17
-		c.G *= 17
-		c.B *= 17
-	default:
-		err = fmt.Errorf("invalid length, must be 7 or 4")
-	}
-	return
 }

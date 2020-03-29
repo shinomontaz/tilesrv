@@ -1,7 +1,6 @@
 package reader
 
 import (
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -66,10 +65,6 @@ func (r *Reader) ParsePbf(path string) (*osm.Data, error) {
 					data.Ways[way.Id] = way
 					data.Findex.AddWay(way, zoom)
 				}
-			case *osmpbf.Relation:
-				// Ignore
-			default:
-				return nil, fmt.Errorf("unknown type %T", v)
 			}
 		}
 	}
