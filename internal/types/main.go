@@ -27,6 +27,7 @@ type ITile interface {
 	IsCrossing(p1, p2 s2.Point) bool
 	DrawPolyLine(coords [][]float64, tags map[string]string)
 	GetRelativeXY(p IPoint) (float64, float64)
+	GetZoom() int
 }
 
 type IDrawable interface {

@@ -57,6 +57,10 @@ func (t *Tile) IsCrossing(t1, t2 s2.Point) bool {
 	return s2.VertexCrossing(t.p1, t.p2, t1, t2) || s2.VertexCrossing(t.p1, t.p3, t1, t2) || s2.VertexCrossing(t.p2, t.p4, t1, t2)
 }
 
+func (tl *Tile) GetZoom() int {
+	return tl.zoom
+}
+
 func (tl *Tile) Draw(osmData *osm.Data) error {
 	for _, feature := range osmData.GetFeatures(tl.nwPt, tl.sePt, tl.zoom) {
 		feature.Draw(tl)
@@ -81,6 +85,8 @@ func (t *Tile) DrawPolyLine(coords [][]float64, tags map[string]string) {
 }
 
 func (t *Tile) style(c *gg.Context, tags map[string]string) {
+	styled := false
+
 	for key, val := range tags {
 		if _, exists := t.styles[key]; !exists {
 			continue
@@ -91,6 +97,12 @@ func (t *Tile) style(c *gg.Context, tags map[string]string) {
 				continue
 			}
 			style.Implement(c)
+			styled = true
 		}
+	}
+
+	if !styled {
+		def := t.styles["default"]["default"]
+		def.Implement(c)
 	}
 }

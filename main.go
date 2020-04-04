@@ -21,9 +21,6 @@ func init() {
 func main() {
 	r := reader.New(env.Config.FileMap)
 
-	// fmt.Println(env.Config.Styles)
-	// panic("!")
-
 	gIndex := r.Init()
 
 	tlh := tile.New("/tiles", gIndex, env.Config.Styles)

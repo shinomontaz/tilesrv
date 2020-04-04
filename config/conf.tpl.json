@@ -1,8 +1,15 @@
 {
     "TestFlag":true,
     "ListenPort":3001,
-    "FileMap":"E:/vbshared/maps/moscow/central-fed-district-latest.osm.pbf",
+    "FileMap":"example.osm.pbf",
     "Styles": {
+        "default" : {
+            "default": {
+            "color": "#ccc",
+            "width": 1,
+            "opacity": 0.5
+            }
+        },
         "boundary": {
                 "administrative": {
                 "color": "#f00",
