@@ -62,7 +62,7 @@ func (si S2Index) GetFeatures(nwPt, sePt types.IPoint, zoom int) []FeatureRef {
 
 	i := 0
 	for _, fr := range ret {
-		if fr.Zoom > 0 && fr.Zoom < zoom {
+		if fr.Zoom >= 0 && fr.Zoom <= zoom {
 			ret[i] = fr
 			i++
 		}

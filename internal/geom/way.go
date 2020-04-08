@@ -1,6 +1,9 @@
 package geom
 
 import (
+	"fmt"
+	"strconv"
+
 	"github.com/golang/geo/s2"
 	"github.com/shinomontaz/tilesrv/internal/types"
 )
@@ -15,6 +18,10 @@ type Way struct {
 func (w *Way) SetNodes(nodes map[int64]types.IPoint) {
 	w.Nodes = make([]types.IPoint, 0)
 	for _, id := range w.NodeIDs {
+		if _, ok := nodes[id]; !ok {
+			fmt.Println(id)
+			panic("cannot find node!")
+		}
 		w.Nodes = append(w.Nodes, nodes[id])
 	}
 }
@@ -31,6 +38,12 @@ func (w Way) match(tags []types.Tag) bool {
 }
 
 func (w Way) MatchAny(rules map[int][]types.Tag) (int, bool) {
+	if min_zoom, ok := w.Tags["min_zoom"]; ok {
+		mz, err := strconv.ParseFloat(min_zoom, 64)
+		if err == nil {
+			return int(mz), true
+		}
+	}
 	for zoom, tags := range rules {
 		if w.match(tags) {
 			return zoom, true

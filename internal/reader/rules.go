@@ -7,6 +7,9 @@ var mapRules = map[int][]types.Tag{
 		{"natural", "coastline"},
 		{"admin_level", "2"},
 	},
+	3: []types.Tag{
+		{"natural", "water"},
+	},
 	6: []types.Tag{
 		{"admin_level", "3"},
 		{"highway", "motorway"},
